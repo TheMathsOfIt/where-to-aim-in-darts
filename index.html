@@ -3,86 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Find your darts spread</title>
+<title>Where should you aim in darts?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:wght@400;600&family=Inter:wght@400;500;600&display=swap">
 <style>
-/* VOICE: a calm worked example from The Maths Of It, numbers you can trust
-   IDEA: the dartboard itself, lit up by your own throws
-   PICTURE: a real board with your heatmap and a gold ring on where to aim
-   COLOUR and TYPE: matte black, soft white, electric blue for working, gold only for the answer; STIX Two (maths text) + Inter
-   LAYOUT: board left with the result large beside it; scores box and steps below */
-:root{color-scheme:light dark;--bg:light-dark(#f6f6f4,#101010);--ink:light-dark(#141414,#f5f5f5);--muted:light-dark(#575c63,#9ca3af);--line:light-dark(#d9d9d6,#2a2a2a);--panel:light-dark(#ffffff,#171717);--blue:light-dark(#0a7bb0,#38bdf8);--gold:light-dark(#9a7100,#facc15);--err:light-dark(#b3261e,#f28b82)}
-:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+:root{color-scheme:light dark;--bg:light-dark(#f6f6f4,#101010);--ink:light-dark(#141414,#f5f5f5);--muted:light-dark(#62676e,#8b919a);--line:light-dark(#dcdcd8,#262626);--panel:light-dark(#ffffff,#171717);--blue:light-dark(#0a7bb0,#38bdf8);--gold:light-dark(#9a7100,#facc15);--err:light-dark(#b3261e,#f28b82)}
 *{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
-.band{padding:clamp(24px,4vw,56px) max(5vw,16px);max-width:1240px;margin:0 auto}
-h1{font:600 clamp(32px,4.6vw,48px)/1.05 "STIX Two Text",Georgia,serif;margin:0 0 10px;text-wrap:balance}
-h2{font:600 22px/1.2 "STIX Two Text",Georgia,serif;margin:0 0 10px}
-.lead{color:var(--muted);max-width:62ch;margin:0}
-.top{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(20px,3vw,44px);align-items:center;margin-top:28px}
-.fig{position:relative;aspect-ratio:1;max-width:620px;width:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif}
+main{max-width:980px;margin:0 auto;padding:clamp(28px,5vw,64px) max(5vw,18px)}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font:600 clamp(30px,4.4vw,44px)/1.1 "STIX Two Text",Georgia,serif;margin:6px 0 28px;text-wrap:balance}
+.top{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(20px,4vw,48px);align-items:center}
+.fig{position:relative;aspect-ratio:1;width:100%;max-width:560px}
 .fig canvas{position:absolute;inset:0;width:100%;height:100%}
-.res .big{font:400 clamp(56px,8vw,88px)/1 "STIX Two Text",Georgia,serif;color:var(--blue);white-space:nowrap}
-.res .lab{font-size:14px;color:var(--muted);margin-top:18px}
-.res .aim{font:600 clamp(26px,3vw,34px)/1.15 "STIX Two Text",Georgia,serif;color:var(--gold);margin-top:4px}
-.rows{margin-top:18px;border-top:1px solid var(--line)}
-.rows div{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line)}
-.rows b{font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
-.rows .best,.rows .best b{color:var(--gold)}
-.range{font-size:14px;color:var(--muted);margin-top:6px}
-.grid2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(20px,3vw,44px);margin-top:36px}
-label{font-weight:500;display:block;margin-bottom:6px}
-textarea{width:100%;min-height:150px;font:16px/1.5 Inter,system-ui,sans-serif;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:12px;resize:vertical}
+.cap{color:var(--muted);font-size:15px}
+.big{font:400 clamp(48px,7vw,76px)/1 "STIX Two Text",Georgia,serif;color:var(--gold);margin:4px 0 22px;text-wrap:balance}
+label{display:flex;justify-content:space-between;font-weight:500;font-size:15px}
+label b{font-weight:500;font-variant-numeric:tabular-nums;color:var(--blue)}
+input[type=range]{width:100%;height:36px;margin:0;accent-color:var(--blue)}
+.cmp{margin-top:18px;border-top:1px solid var(--line)}
+.cmp div{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:15px;color:var(--muted)}
+.cmp b{font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums}
+.cmp .best,.cmp .best b{color:var(--gold)}
+.test{margin-top:36px;border-top:1px solid var(--line);padding-top:24px}
+.test h2{font:600 22px/1.2 "STIX Two Text",Georgia,serif;margin:0 0 4px}
+textarea{width:100%;min-height:96px;margin-top:12px;font:15px/1.5 Inter,system-ui,sans-serif;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px;resize:vertical}
+.btns{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:12px}
+button.go{min-height:46px;padding:0 22px;border-radius:999px;border:0;background:var(--blue);color:#06131b;font:600 16px Inter,system-ui,sans-serif;cursor:pointer}
+button.link{border:0;background:none;color:var(--muted);font:15px Inter,system-ui,sans-serif;text-decoration:underline;cursor:pointer;padding:8px 2px}
+.msg{min-height:22px;margin-top:8px;font-size:14px;color:var(--muted)}.msg.bad{color:var(--err)}
+footer{margin-top:40px;font-size:14px;color:var(--muted)}
+a{color:inherit}
 textarea:focus,button:focus-visible,input:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
-.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-button{min-height:44px;padding:0 18px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:500 16px Inter,system-ui,sans-serif;cursor:pointer}
-button.go{background:var(--blue);border-color:var(--blue);color:#06131b}
-.msg{min-height:24px;margin-top:8px;font-size:14px;color:var(--muted)}.msg.bad{color:var(--err)}
-.slider{margin-top:22px}input[type=range]{width:100%;height:44px;accent-color:var(--blue)}
-ol{padding-left:20px;margin:0}ol li{margin:6px 0}
-.rule div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
-.rule span:last-child{color:var(--gold);text-align:right}
-.small{font-size:14px;color:var(--muted);margin-top:14px;max-width:70ch}
-a{color:var(--blue)}
-@media(max-width:760px){.top,.grid2{grid-template-columns:minmax(0,1fr)}.fig{max-width:520px;margin:0 auto}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+@media(max-width:760px){.top{grid-template-columns:minmax(0,1fr)}.fig{margin:0 auto}}
 </style>
 </head>
 <body>
-<div class="band">
-  <h1>Find your darts spread, and where you should aim</h1>
-  <p class="lead">Throw 50 darts at the centre of the board, type in what each one scored, and this works out how wide your darts land (your spread, &sigma;) and the spot that scores you the most points per dart. From <em>The Maths Of It</em>, episode 1.</p>
+<main>
+  <div class="eyebrow">The Maths Of It · Episode 1</div>
+  <h1>Where should you aim in darts?</h1>
 
   <div class="top">
-    <div class="fig"><canvas id="board" role="img" aria-label="Dartboard heatmap of your average score for every aim point, with the best spot ringed"></canvas></div>
-    <div class="res" aria-live="polite">
-      <div class="lab">Your spread</div>
-      <div class="big" id="sig">&sigma; = 30 mm</div>
-      <div class="range" id="ci"></div>
-      <div class="lab">Best place to aim</div>
-      <div class="aim" id="aim">&nbsp;</div>
-      <div class="rows" id="rows"></div>
-      <div class="slider"><label for="s">Or set your spread by hand: <span id="sv">30</span> mm</label><input id="s" type="range" min="3" max="100" step="0.5" value="30"></div>
+    <div class="fig"><canvas id="board" role="img" aria-label="Dartboard heatmap of average score for every aim point, with the best spot ringed"></canvas></div>
+    <div aria-live="polite">
+      <div class="cap">Best place to aim</div>
+      <div class="big" id="aim">&nbsp;</div>
+      <label for="s">Your spread <b id="sv">σ = 30 mm</b></label>
+      <input id="s" type="range" min="3" max="100" step="0.5" value="30">
+      <div class="cap" id="ci"></div>
+      <div class="cmp" id="rows"></div>
     </div>
   </div>
 
-  <div class="grid2">
-    <div>
-      <label for="scores">Your scores, aimed at the centre (any separator)</label>
-      <textarea id="scores" spellcheck="false" placeholder="e.g. 25, 3, 50, 12, 0 ..."></textarea>
-      <div class="btns"><button class="go" id="run">Work out my spread</button><button id="ex">Load example scores</button><button id="clr">Clear</button></div>
-      <div class="msg" id="msg">Count a bounce-out or a miss of the board as 0. 50 darts is good, 100 is better.</div>
-    </div>
-    <div>
-      <h2>How to do the test</h2>
-      <ol><li>Aim every dart at the very centre of the bull.</li><li>Write down the score of each dart: 50, 25, a single, a double or a treble.</li><li>Paste them here and press the button.</li></ol>
-      <h2 style="margin-top:22px">Rule of thumb</h2>
-      <div class="rule"><div><span>Under about 16 mm</span><span>treble 20</span></div><div><span>About 17 to 30 mm</span><span>treble 19</span></div><div><span>Wider than that</span><span>lower left, towards the centre</span></div></div>
-    </div>
-  </div>
-  <p class="small">How it works: the board is scored on a 1 mm grid with real ring sizes. Your darts are modelled as a round normal cloud around the aim point, and your spread is the value that makes your 50 scores most likely (the method Ryan Tibshirani describes in <em>Significance</em>). Then every aim point is tested. Real throws often scatter more up and down than side to side, so treat the result as a guide.</p>
-</div>
+  <section class="test">
+    <h2>Find your spread</h2>
+    <div class="cap">Throw 50 darts at the bull and type in every score. A miss is 0.</div>
+    <textarea id="scores" spellcheck="false" placeholder="25, 3, 50, 12, 0 …" aria-label="Your scores"></textarea>
+    <div class="btns"><button class="go" id="run">Work out my spread</button><button class="link" id="ex">Try example scores</button><button class="link" id="clr">Clear</button></div>
+    <div class="msg" id="msg"></div>
+  </section>
+
+  <footer>Round-throw model, as in Tibshirani et al. (2011). <a href="https://github.com/TheMathsOfIt/where-to-aim-in-darts">Code on GitHub</a></footer>
+</main>
 <script>
 {
 const ORDER=[20,1,18,4,13,6,10,15,2,17,3,19,7,16,8,11,14,9,12,5];
@@ -91,30 +73,29 @@ function score(x,y){const r=Math.hypot(x,y);if(r>R.do)return 0;if(r<=R.bull)retu
 // 1 mm score grid, -200..200
 const N=401,O=200,S=new Float32Array(N*N);for(let j=0;j<N;j++)for(let i=0;i<N;i++)S[j*N+i]=score(i-O,O-j);
 const VALID=new Set([0,25,50]);for(let s=1;s<=20;s++){VALID.add(s);VALID.add(2*s);VALID.add(3*s);}
-// probability of each score when aiming at the centre, for each sigma
+// chance of each score when aiming at the centre, for each sigma
 const SIGS=[];for(let s=3;s<=100;s+=0.5)SIGS.push(s);
 const PROB=SIGS.map(sg=>{const p=new Float64Array(61),inv=1/(2*sg*sg);let tot=0;for(let j=0;j<N;j++){const y=O-j;for(let i=0;i<N;i++){const x=i-O,w=Math.exp(-(x*x+y*y)*inv);tot+=w;p[S[j*N+i]]+=w;}}
   const all=2*Math.PI*sg*sg;p[0]+=all-tot;for(let k=0;k<61;k++)p[k]/=all;return p;});
 function fit(scores){const ll=SIGS.map((sg,n)=>scores.reduce((a,s)=>a+Math.log(Math.max(PROB[n][s],1e-12)),0));let b=0;ll.forEach((v,i)=>{if(v>ll[b])b=i;});
   const ok=SIGS.filter((s,i)=>ll[i]>=ll[b]-1.92);return{sigma:SIGS[b],lo:ok[0],hi:ok[ok.length-1]};}
-// expected score for every aim point: separable Gaussian blur of the score grid
+// average score for every aim point: Gaussian blur of the score grid
 function expected(sg){const r=Math.ceil(3.5*sg),k=[];let t=0;for(let d=-r;d<=r;d++){const w=Math.exp(-d*d/(2*sg*sg));k.push(w);t+=w;}k.forEach((w,i)=>k[i]=w/t);
   const tmp=new Float32Array(N*N),E=new Float32Array(N*N);
   for(let j=0;j<N;j++)for(let i=0;i<N;i++){let a=0;for(let d=-r;d<=r;d++){const ii=i+d;if(ii>=0&&ii<N)a+=S[j*N+ii]*k[d+r];}tmp[j*N+i]=a;}
   for(let j=0;j<N;j++)for(let i=0;i<N;i++){let a=0;for(let d=-r;d<=r;d++){const jj=j+d;if(jj>=0&&jj<N)a+=tmp[jj*N+i]*k[d+r];}E[j*N+i]=a;}return E;}
 const at=(E,x,y)=>E[Math.round(O-y)*N+Math.round(x+O)];
 function name(x,y){const r=Math.hypot(x,y),t=(Math.atan2(x,y)*180/Math.PI+360)%360,s=ORDER[Math.floor(((t+9)%360)/18)];
-  if(r<=R.bull)return'the bull';if(r<=R.ob)return'the outer bull';if(r>=R.ti&&r<=R.to)return'treble '+s;if(r>R.to&&r<R.to+6)return'just outside treble '+s;if(r>=R.di)return'double '+s;return(r<R.ti?'inner single ':'outer single ')+s+(r<60?', '+Math.round(r/10)+' cm from the centre':'');}
+  if(r<=R.bull)return'Bull';if(r<=R.ob)return'Outer bull';if(r>=R.ti&&r<=R.to)return'Treble '+s;if(r>R.to&&r<R.to+6)return'Just outside treble '+s;if(r>=R.di)return'Double '+s;return'Single '+s+(r<60?', near the centre':'');}
 // drawing
 const cv=document.getElementById('board'),ctx=cv.getContext('2d');
 const RAMP=[[16,16,16],[10,36,51],[12,74,102],[56,189,248],[186,230,253],[245,245,245]];
 function col(v){v=Math.max(0,Math.min(1,v))*(RAMP.length-1);const i=Math.min(RAMP.length-2,Math.floor(v)),f=v-i;return RAMP[i].map((c,k)=>Math.round(c+(RAMP[i+1][k]-c)*f));}
-let heatImg=null;
+let heatImg=null,best=null;
 function makeHeat(E){const c=document.createElement('canvas');c.width=c.height=341;const g=c.getContext('2d'),im=g.createImageData(341,341);let lo=1e9,hi=-1e9;
   for(let j=0;j<341;j++)for(let i=0;i<341;i++){const x=i-170,y=170-j;if(x*x+y*y>170*170)continue;const v=at(E,x,y);lo=Math.min(lo,v);hi=Math.max(hi,v);}
   for(let j=0;j<341;j++)for(let i=0;i<341;i++){const x=i-170,y=170-j,p=(j*341+i)*4;if(x*x+y*y>170.5*170.5){im.data[p+3]=0;continue;}const c3=col((at(E,x,y)-lo)/(hi-lo));im.data[p]=c3[0];im.data[p+1]=c3[1];im.data[p+2]=c3[2];im.data[p+3]=236;}
   g.putImageData(im,0,0);return c;}
-let best=null;
 function draw(){const w=cv.clientWidth,dpr=window.devicePixelRatio||1;cv.width=w*dpr;cv.height=w*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
   const cx=w/2,cy=w/2,K=w/2/226,X=x=>cx+x*K,Y=y=>cy-y*K;ctx.clearRect(0,0,w,w);
   ctx.fillStyle='#0b0b0b';ctx.beginPath();ctx.arc(cx,cy,224*K,0,7);ctx.fill();
@@ -127,28 +108,28 @@ function draw(){const w=cv.clientWidth,dpr=window.devicePixelRatio||1;cv.width=w
   ctx.fillStyle='#EDEDED';ctx.font=`600 ${Math.max(11,17*K)}px Inter,system-ui,sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
   ORDER.forEach((n,i)=>{const a=i*18*Math.PI/180;ctx.fillText(n,X(194*Math.sin(a)),Y(194*Math.cos(a)));});
   if(best){const bx=X(best.x),by=Y(best.y),rr=Math.max(10,9*K);ctx.lineWidth=7;ctx.strokeStyle='#101010';ctx.beginPath();ctx.arc(bx,by,rr,0,7);ctx.stroke();ctx.lineWidth=3;ctx.strokeStyle='#FACC15';ctx.beginPath();ctx.arc(bx,by,rr,0,7);ctx.stroke();ctx.fillStyle='#FACC15';ctx.beginPath();ctx.arc(bx,by,3,0,7);ctx.fill();}}
-const ro=new ResizeObserver(draw);ro.observe(cv);
-const $=id=>document.getElementById(id),f1=v=>v.toFixed(1),f2=v=>v.toFixed(2);
+new ResizeObserver(draw).observe(cv);
+const $=id=>document.getElementById(id),f1=v=>v%1?v.toFixed(1):String(v),f2=v=>v.toFixed(1);
 function show(sg,ci){const E=expected(sg);let b={v:-1};for(let j=30;j<=370;j++)for(let i=30;i<=370;i++){const x=i-O,y=O-j;if(x*x+y*y>170*170)continue;const v=E[j*N+i];if(v>b.v)b={v,x,y};}
   best=b;heatImg=makeHeat(E);draw();
   const a19=ORDER.indexOf(19)*18*Math.PI/180,t20=at(E,0,103),t19=at(E,103*Math.sin(a19),103*Math.cos(a19)),bull=at(E,0,0);
-  $('sig').innerHTML=`&sigma; = ${sg%1?f1(sg):sg} mm`;$('ci').textContent=ci||'';$('aim').textContent=name(b.x,b.y);
-  $('rows').innerHTML=[['Best spot',b.v,true],['Centre of treble 20',t20],['Centre of treble 19',t19],['The bull',bull]].map(([l,v,k])=>`<div class="${k?'best':''}"><span>${l}</span><b>${f2(v)} pts/dart</b></div>`).join('');
-  $('s').value=sg;$('sv').textContent=sg%1?f1(sg):sg;}
+  $('aim').textContent=name(b.x,b.y);$('sv').textContent=`σ = ${f1(sg)} mm`;$('ci').textContent=ci||'';
+  $('rows').innerHTML=[['Best spot',b.v,true],['Treble 20',t20],['Treble 19',t19],['Bull',bull]].map(([l,v,k])=>`<div class="${k?'best':''}"><span>${l}</span><b>${f2(v)} pts a dart</b></div>`).join('');
+  $('s').value=sg;}
 function parse(txt){const raw=txt.split(/[^0-9]+/).filter(Boolean).map(Number);const bad=raw.filter(v=>!VALID.has(v));return{ok:raw.filter(v=>VALID.has(v)),bad};}
 $('run').addEventListener('click',()=>{const {ok,bad}=parse($('scores').value),m=$('msg');
-  if(bad.length){m.className='msg bad';m.textContent=`These aren't possible dart scores: ${[...new Set(bad)].slice(0,8).join(', ')}. Please check them.`;return;}
-  if(ok.length<20){m.className='msg bad';m.textContent=`I found ${ok.length} scores. Please enter at least 20; 50 is better.`;return;}
-  const r=fit(ok);m.className='msg';m.textContent=`Used ${ok.length} scores.`;show(r.sigma,`likely between ${r.lo} and ${r.hi} mm`);
+  if(bad.length){m.className='msg bad';m.textContent=`Not possible dart scores: ${[...new Set(bad)].slice(0,8).join(', ')}`;return;}
+  if(ok.length<20){m.className='msg bad';m.textContent=`Found ${ok.length} scores. Enter at least 20.`;return;}
+  const r=fit(ok);m.className='msg';m.textContent=`From ${ok.length} darts.`;show(r.sigma,`Likely ${r.lo}–${r.hi} mm`);
   try{localStorage.setItem('tmoi-scores',$('scores').value)}catch(e){}});
-$('s').addEventListener('input',e=>{$('sv').textContent=e.target.value;});
-$('s').addEventListener('change',e=>show(parseFloat(e.target.value),'set by hand'));
-// example: 50 simulated darts aimed at the centre with a 30 mm spread (seeded, so it is always the same)
+$('s').addEventListener('input',e=>{$('sv').textContent=`σ = ${f1(+e.target.value)} mm`;});
+$('s').addEventListener('change',e=>show(parseFloat(e.target.value),''));
+// example: 50 simulated darts with a 30 mm spread (seeded, always the same)
 $('ex').addEventListener('click',()=>{let s=21;const rnd=()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;},out=[];for(let i=0;i<50;i++){const u=Math.max(1e-9,rnd()),v=rnd(),m=Math.sqrt(-2*Math.log(u));out.push(score(30*m*Math.cos(2*Math.PI*v),30*m*Math.sin(2*Math.PI*v)));}
-  $('scores').value=out.join(', ');$('msg').className='msg';$('msg').textContent='Example: 50 simulated darts with a 30 mm spread. Press the button.';});
-$('clr').addEventListener('click',()=>{$('scores').value='';$('msg').className='msg';$('msg').textContent='Cleared.';});
+  $('scores').value=out.join(', ');$('msg').className='msg';$('msg').textContent='50 example darts with a 30 mm spread.';});
+$('clr').addEventListener('click',()=>{$('scores').value='';$('msg').textContent='';});
 try{const v=localStorage.getItem('tmoi-scores');if(v)$('scores').value=v;}catch(e){}
-show(30,'example starting point');
+show(30,'');
 }
 </script>
 </body>
